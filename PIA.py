@@ -191,24 +191,25 @@ def seleccionar_turno():
 
 def seleccionar_sala(fecha_reserva, turno_seleccionado):
     """Permite seleccionar una sala disponible para la fecha y turno indicados."""
-    fecha_texto = fecha_reserva.strftime("%m-%d-%Y")
-
     try:
+        fecha_texto_sql = fecha_reserva.strftime("%Y-%m-%d")
+        fecha_texto_usuario = fecha_reserva.strftime("%m-%d-%Y")
+
         with sqlite3.connect("ReservasCoworking.db") as conn:
             mi_cursor = conn.cursor()
             mi_cursor.execute(
-                "SELECT clave, nombre, cupo FROM salas WHERE clave NOT IN "
-                "(SELECT clave_sala FROM reserva WHERE fecha = ? AND turno = ?)",
-                (fecha_texto, turno_seleccionado)
+                "SELECT clave, nombre, cupo FROM salas WHERE clave NOT IN ("
+                "SELECT clave_sala FROM reserva WHERE fecha = ? AND turno = ?)",
+                (fecha_texto_sql, turno_seleccionado)
             )
             salas_disponibles = mi_cursor.fetchall()
 
             if not salas_disponibles:
-                print("\nNo hay salas disponibles en esa fecha y turno.")
+                print(f"\nNo hay salas disponibles el {fecha_texto_usuario} en ese turno.")
                 return None
 
             print("\n" + "=" * 50)
-            print(f"SALAS DISPONIBLES el {fecha_reserva.strftime('%m-%d-%Y')} en turno {turno_seleccionado}")
+            print(f"SALAS DISPONIBLES el {fecha_texto_usuario} en turno {turno_seleccionado}")
             print("=" * 50)
             for clave_sala, nombre_sala, cupo_sala in salas_disponibles:
                 print(f"\n{clave_sala} - Sala {nombre_sala} para {cupo_sala} personas")
@@ -856,5 +857,5 @@ def main():
         else:
             print("\nOpción incorrecta.\n")
 
-if __name__ == "__main__":
+if ___name___ == "__main__":
     main()
