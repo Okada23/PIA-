@@ -857,5 +857,5 @@ def main():
         else:
             print("\nOpción incorrecta.\n")
 
-if ___name___ == "__main__":
+if __name__ == "__main__":
     main()
